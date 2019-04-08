@@ -16,19 +16,55 @@ router.get('/', function(req, res, next) {
 });
 /* GET produtos by id listing. */
 router.get('/:id', function(req, res, next) {
-    res.send('respond with a resource '+req.params.id);
+  console.log("Buscar produto por id",req.params.id)
+  Produto.findById(req.params.id, function(error, usuario) {
+    if(error) 
+      res.send(error);
+    res.json(usuario);
   });
-/* GET users listing. */
+});
+/* POST user */
 router.post('/', function(req, res, next) {
-    res.send('respond with a resource');
+  console.log("POST");
+    var produto = new Produto();
+    produto.nome = req.body.nome;
+    produto.preco = req.body.preco;
+    produto.save(function(error) {
+      if(error)
+        res.status(500).send(err);
+                        
+      res.sendStatus(201);
+    });
   });
-/* GET users listing. */
-router.put(':id', function(req, res, next) {
-    res.send('respond with a resource');
+
+router.put('/:id', function(req, res, next) {
+  console.log("PUT ", req.params.id);
+  Produto.findById(req.params.id, function(error, produto) {
+    if(error) 
+      res.send(error);
+    
+    produto.nome = req.body.nome;
+    produto.preco = req.body.preco;
+  
+    produto.save(function(error) {
+      if(error)
+        res.send(error);
+      //Se não teve erro, retorna response normal (200)
+      res.sendStatus(200);
+    });
   });
-/* GET users listing. */
-router.delete(':id', function(req, res, next) {
-    res.send('respond with a resource');
+});
+
+router.delete('/:id', function(req, res, next) {
+  console.log("Delete ", req.params.id);
+  Produto.remove({
+    _id: req.params.id
+  }, function(error) {
+    if(error)
+      res.send(error);
+    //Se não teve erro, retorna response normal (200)
+    res.sendStatus(200);
   });
+});
         
 module.exports = router;
