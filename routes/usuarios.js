@@ -1,35 +1,42 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Produto = require('../model/produto')
+var Usuario = require('../model/usuario')
 
 mongoose.connect("mongodb://localhost/app_produtos");
-/* GET produtos listing. */
 router.get('/', function(req, res, next) {
-  Produto.find(function(err,produtos) {
+  Usuario.find(function(err,usuarios) {
     if(err){
         res.status(500).send(err);
     }
     else
-        res.json(produtos);
+        res.json(usuarios);
   });
 });
-/* GET produtos by id listing. */
+
 router.get('/:id', function(req, res, next) {
-  console.log("Buscar produto por id",req.params.id)
-  Produto.findById(req.params.id, function(error, produto) {
+  Usuario.findById(req.params.id, function(error, usuario) {
     if(error) 
       res.send(error);
-    res.json(produto);
+    res.json(usuario);
   });
 });
+
+router.get('/username/:username', function(req, res, next) {
+    Usuario.findOne({'username':req.params.username}, 
+    function(error, usuario) {
+      if(error) 
+        res.send(error);
+      res.json(usuario);
+    });
+  });
 /* POST user */
 router.post('/', function(req, res, next) {
-  console.log("POST");
-    var produto = new Produto();
-    produto.nome = req.body.nome;
-    produto.preco = req.body.preco;
-    produto.save(function(error) {
+    var usuario = new Usuario();
+    usuario.nome = req.body.nome;
+    usuario.username = req.body.username;
+    usuario.senha = req.body.senha;
+    usuario.save(function(error) {
       if(error)
         res.status(500).send(err);
                         
@@ -39,14 +46,15 @@ router.post('/', function(req, res, next) {
 
 router.put('/:id', function(req, res, next) {
   console.log("PUT ", req.params.id);
-  Produto.findById(req.params.id, function(error, produto) {
+  Usuario.findById(req.params.id, function(error, usuario) {
     if(error) 
       res.send(error);
     
-    produto.nome = req.body.nome;
-    produto.preco = req.body.preco;
-  
-    produto.save(function(error) {
+      usuario.nome = req.body.nome;
+      usuario.username = req.body.username;
+      usuario.senha = req.body.senha;
+    
+      usuario.save(function(error) {
       if(error)
         res.send(error);
       //Se não teve erro, retorna response normal (200)
@@ -57,7 +65,7 @@ router.put('/:id', function(req, res, next) {
 
 router.delete('/:id', function(req, res, next) {
   console.log("Delete ", req.params.id);
-  Produto.remove({
+  Usuario.remove({
     _id: req.params.id
   }, function(error) {
     if(error)
