@@ -33,4 +33,20 @@ router.post('/', function(req, res, next) {
       res.sendStatus(201);
     });*/
   });
-  module.exports = router;
+
+  function validaUsuario(req, res, next){
+    var token = req.get("x-auth-token");
+    if(!token)
+      res.status(403).send("Nao tem o token de acesso!");
+    else{
+      jwt.verify(token,'SEN@CR$',function(err,userId){
+        if(err) 
+          res.status(401).send(err);
+        else {
+          console.log(userId);
+          next();
+        }   
+      });
+    }
+  }
+  module.exports = {router,validaUsuario};

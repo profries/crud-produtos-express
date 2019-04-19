@@ -15,10 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/produtos', authRouter.validaUsuario);
+
 app.use('/', indexRouter);
 app.use('/produtos', produtosRouter);
 app.use('/usuarios', usuariosRouter);
-app.use('/auth', authRouter);
+app.use('/auth', authRouter.router);
 
 
 module.exports = app;
