@@ -28,6 +28,7 @@ router.post('/', function(req, res, next) {
   console.log("POST");
     var produto = new Produto();
     produto.nome = req.body.nome;
+    produto.marca = req.body.marca;
     produto.preco = req.body.preco;
     produto.save(function(error) {
       if(error)
@@ -44,8 +45,9 @@ router.put('/:id', function(req, res, next) {
       res.send(error);
     
     produto.nome = req.body.nome;
+    produto.marca = req.body.marca;
     produto.preco = req.body.preco;
-  
+    
     produto.save(function(error) {
       if(error)
         res.send(error);

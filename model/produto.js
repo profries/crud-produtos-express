@@ -3,6 +3,7 @@ var Schema = mongoose.Schema;
 
 var ProdutosSchema = new Schema({
     nome: String,
+    marca: String,
     preco: Number
 },{
     versionKey:false
